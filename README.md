@@ -1,4 +1,4 @@
-This project is a Resume Generator Tool built by students to help users create professional resumes easily. It includes a form to collect information, shows a live preview, allows users to download the resume as a PDF, and even lets them save it for later use.
+This project is a Resume Generator Tool built to help users create professional resumes easily. It includes a form to collect information, shows a live preview, allows users to download the resume as a PDF, and even lets them save it for later use.
 
 ✅ Key Benefits:
 Simple and easy to use
