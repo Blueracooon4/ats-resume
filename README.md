@@ -14,7 +14,7 @@ Helps us as students learn how real web apps work
 🛠 Technologies Used:
 HTML – For the structure of the website
 
-Tailwind CSS – For styling and design
+CSS – For styling and design
 
 JavaScript – For making the website interactive
 
