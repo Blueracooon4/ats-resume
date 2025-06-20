@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume PDF Export Module</title>
+    <style>
+        /* Main Interface Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+        }
+
+        .module-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .module-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .module-title {
+            color: #2a5298;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .module-subtitle {
+            color: #666;
+            font-size: 16px;
+        }
+
+        /* Export Controls */
+        .export-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .export-controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-export {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-export:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-preview {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-preview:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+
+        .btn-sample {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-sample:hover {
+            background: #138496;
+            transform: translateY(-1px);
+        }
+
+        /* Data Input Section */
+        .data-input {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .input-label {
+            font-weight: 600;
+            color: #2a5298;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .data-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .data-textarea:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+
+        /* Resume Template Styles */
+        .resume-container {
+            display: none;
+        }
+
+        .resume {
+            font-family: 'Times New Roman', serif;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.75in;
+            background: white;
+            color: #333;
+            line-height: 1.6;
+            font-size: 11pt;
+        }
+
+        .resume-header {
+            text-align: center;
+            margin-bottom: 25pt;
+            padding-bottom: 15pt;
+            border-bottom: 2pt solid #000;
+        }
+
+        .resume-name {
+            font-size: 20pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2pt;
+            margin-bottom: 8pt;
+        }
+
+        .resume-contact {
+            font-size: 10pt;
+            line-height: 1.4;
+        }
+
+        .resume-section {
+            margin-bottom: 20pt;
+        }
+
+        .section-title {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1pt;
+            margin-bottom: 10pt;
+            padding-bottom: 3pt;
+            border-bottom: 1pt solid #000;
+        }
+
+        .section-content {
+            font-size: 11pt;
+            text-align: justify;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 12pt;
+        }
+
+        .item-header {
+            font-weight: bold;
+            margin-bottom: 3pt;
+        }
+
+        .item-details {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 5pt;
+        }
+
+        .item-description {
+            margin-left: 15pt;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120pt, 1fr));
+            gap: 8pt;
+        }
+
+        .skill-category {
+            font-weight: bold;
+            margin-bottom: 3pt;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .module-container {
+                background: none !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                padding: 0 !important;
+                max-width: none !important;
+            }
+            
+            .module-header,
+            .export-section,
+            .data-input {
+                display: none !important;
+            }
+            
+            .resume-container {
+                display: block !important;
+            }
+            
+            .resume {
+                margin: 0 !important;
+                padding: 0.5in !important;
+                max-width: none !important;
+            }
+        }
+
+        /* Status Messages */
+        .status-message {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-weight: 500;
+        }
+
+        .status-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Preview Toggle */
+        .preview-section {
+            margin-top: 20px;
+            border-top: 2px solid #e9ecef;
+            padding-top: 20px;
+        }
+
+        .preview-container {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            max-height: 600px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .preview-container.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="module-container">
+        <div class="module-header">
+            <h1 class="module-title">🏗️ Resume PDF Export Module</h1>
+            <p class="module-subtitle">Transform JSON/structured data into professional PDF resumes</p>
+        </div>
+
+        <div class="export-section">
+            <h3 style="margin-top: 0; color: #2a5298;">📤 Export Controls</h3>
+            
+            <div class="export-controls">
+                <button class="btn btn-export" onclick="exportToPDF()">
+                    📄 Generate PDF
+                </button>
+                <button class="btn btn-preview" onclick="togglePreview()">
+                    👁️ Toggle Preview
+                </button>
+                <button class="btn btn-sample" onclick="loadSampleData()">
+                    📝 Load Sample
+                </button>
+            </div>
+
+            <div id="statusMessage"></div>
+        </div>
+
+        <div class="data-input">
+            <label class="input-label">📋 Resume Data (JSON Format)</label>
+            <textarea 
+                class="data-textarea" 
+                id="resumeData" 
+                placeholder="Paste your resume data in JSON format here..."
+            ></textarea>
+            <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                💡 <strong>Tip:</strong> Use the "Load Sample" button to see the expected JSON structure
+            </div>
+        </div>
+
+        <div class="preview-section">
+            <div class="preview-container" id="previewContainer">
+                <div class="resume" id="resumePreview">
+                    <!-- Resume content will be generated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden container for PDF generation -->
+        <div class="resume-container" id="resumeOutput">
+            <div class="resume" id="resumePrint">
+                <!-- PDF content will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Resume PDF Export Module
+        class ResumePDFExporter {
+            constructor() {
+                this.dataTextarea = document.getElementById('resumeData');
+                this.previewContainer = document.getElementById('previewContainer');
+                this.resumePreview = document.getElementById('resumePreview');
+                this.resumePrint = document.getElementById('resumePrint');
+                this.statusElement = document.getElementById('statusMessage');
+                
+                this.init();
+            }
+
+            init() {
+                // Auto-update preview when data changes
+                this.dataTextarea.addEventListener('input', () => {
+                    if (this.previewContainer.classList.contains('active')) {
+                        this.updatePreview();
+                    }
+                });
+            }
+
+            showStatus(message, type = 'info') {
+                this.statusElement.innerHTML = `<div class="status-message status-${type}">${message}</div>`;
+                setTimeout(() => {
+                    this.statusElement.innerHTML = '';
+                }, 3000);
+            }
+
+            validateResumeData(data) {
+                const required = ['personalInfo', 'summary'];
+                const missing = required.filter(field => !data[field]);
+                
+                if (missing.length > 0) {
+                    throw new Error(`Missing required fields: ${missing.join(', ')}`);
+                }
+
+                if (!data.personalInfo.name || !data.personalInfo.email) {
+                    throw new Error('Name and email are required in personalInfo');
+                }
+
+                return true;
+            }
+
+            parseResumeData() {
+                try {
+                    const rawData = this.dataTextarea.value.trim();
+                    if (!rawData) {
+                        throw new Error('No data provided');
+                    }
+
+                    const data = JSON.parse(rawData);
+                    this.validateResumeData(data);
+                    return data;
+                } catch (error) {
+                    throw new Error(`Data parsing error: ${error.message}`);
+                }
+            }
+
+            generateResumeHTML(data) {
+                const { personalInfo, summary, experience = [], education = [], skills = {} } = data;
+                
+                let html = `
+                    <div class="resume-header">
+                        <div class="resume-name">${personalInfo.name}</div>
+                        <div class="resume-contact">
+                            ${personalInfo.email}${personalInfo.phone ? ' | ' + personalInfo.phone : ''}${personalInfo.address ? ' | ' + personalInfo.address : ''}
+                            ${personalInfo.linkedin ? '<br>' + personalInfo.linkedin : ''}
+                            ${personalInfo.website ? ' | ' + personalInfo.website : ''}
+                        </div>
+                    </div>
+                `;
+
+                // Professional Summary
+                if (summary) {
+                    html += `
+                        <div class="resume-section">
+                            <div class="section-title">Professional Summary</div>
+                            <div class="section-content">${summary}</div>
+                        </div>
+                    `;
+                }
+
+                // Work Experience
+                if (experience.length > 0) {
+                    html += `<div class="resume-section">
+                        <div class="section-title">Work Experience</div>
+                        <div class="section-content">`;
+                    
+                    experience.forEach(exp => {
+                        html += `
+                            <div class="experience-item">
+                                <div class="item-header">${exp.position} | ${exp.company}</div>
+                                <div class="item-details">${exp.duration}${exp.location ? ' | ' + exp.location : ''}</div>
+                                <div class="item-description">
+                                    ${Array.isArray(exp.responsibilities) 
+                                        ? exp.responsibilities.map(resp => `• ${resp}`).join('<br>')
+                                        : exp.responsibilities || exp.description || ''}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div></div>`;
+                }
+
+                // Education
+                if (education.length > 0) {
+                    html += `<div class="resume-section">
+                        <div class="section-title">Education</div>
+                        <div class="section-content">`;
+                    
+                    education.forEach(edu => {
+                        html += `
+                            <div class="education-item">
+                                <div class="item-header">${edu.degree} | ${edu.institution}</div>
+                                <div class="item-details">${edu.year}${edu.gpa ? ' | GPA: ' + edu.gpa : ''}</div>
+                                ${edu.details ? `<div class="item-description">${edu.details}</div>` : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div></div>`;
+                }
+
+                // Skills
+                if (Object.keys(skills).length > 0) {
+                    html += `<div class="resume-section">
+                        <div class="section-title">Skills</div>
+                        <div class="section-content">
+                            <div class="skills-grid">`;
+                    
+                    Object.entries(skills).forEach(([category, skillList]) => {
+                        const skillsText = Array.isArray(skillList) ? skillList.join(', ') : skillList;
+                        html += `
+                            <div>
+                                <div class="skill-category">${category}:</div>
+                                <div>${skillsText}</div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `</div></div></div>`;
+                }
+
+                return html;
+            }
+
+            updatePreview() {
+                try {
+                    const data = this.parseResumeData();
+                    const html = this.generateResumeHTML(data);
+                    this.resumePreview.innerHTML = html;
+                    this.showStatus('Preview updated successfully', 'success');
+                } catch (error) {
+                    this.resumePreview.innerHTML = `<div style="color: red; padding: 20px; text-align: center;">
+                        <h3>Preview Error</h3>
+                        <p>${error.message}</p>
+                    </div>`;
+                    this.showStatus(error.message, 'error');
+                }
+            }
+
+            togglePreview() {
+                const isActive = this.previewContainer.classList.contains('active');
+                
+                if (isActive) {
+                    this.previewContainer.classList.remove('active');
+                    this.showStatus('Preview hidden', 'info');
+                } else {
+                    this.updatePreview();
+                    this.previewContainer.classList.add('active');
+                    this.showStatus('Preview enabled', 'success');
+                }
+            }
+
+            exportToPDF() {
+                try {
+                    const data = this.parseResumeData();
+                    const html = this.generateResumeHTML(data);
+                    
+                    // Update print container
+                    this.resumePrint.innerHTML = html;
+                    
+                    // Set document title for PDF filename
+                    const originalTitle = document.title;
+                    document.title = `${data.personalInfo.name.replace(/\s+/g, '_')}_Resume`;
+                    
+                    this.showStatus('Generating PDF... Please wait for print dialog', 'info');
+                    
+                    // Trigger print
+                    setTimeout(() => {
+                        window.print();
+                        document.title = originalTitle;
+                        this.showStatus('PDF export completed', 'success');
+                    }, 500);
+                    
+                } catch (error) {
+                    this.showStatus(`Export failed: ${error.message}`, 'error');
+                }
+            }
+
+            loadSampleData() {
+                const sampleData = {
+                    personalInfo: {
+                        name: "Alex Rodriguez",
+                        email: "alex.rodriguez@email.com",
+                        phone: "+1 (555) 987-6543",
+                        address: "San Francisco, CA",
+                        linkedin: "linkedin.com/in/alexrodriguez",
+                        website: "alexrodriguez.dev"
+                    },
+                    summary: "Experienced Full-Stack Developer with 6+ years of expertise in building scalable web applications. Proven track record of leading development teams and delivering high-quality software solutions. Passionate about clean code, user experience, and emerging technologies.",
+                    experience: [
+                        {
+                            position: "Senior Full-Stack Developer",
+                            company: "TechInnovate Solutions",
+                            duration: "2022 - Present",
+                            location: "San Francisco, CA",
+                            responsibilities: [
+                                "Led development of microservices architecture serving 2M+ users",
+                                "Mentored team of 4 junior developers and established coding standards",
+                                "Reduced application response time by 50% through performance optimization",
+                                "Implemented CI/CD pipeline reducing deployment time from hours to minutes"
+                            ]
+                        },
+                        {
+                            position: "Full-Stack Developer",
+                            company: "Digital Dynamics",
+                            duration: "2019 - 2022",
+                            location: "Oakland, CA",
+                            responsibilities: [
+                                "Developed React-based dashboard increasing user engagement by 35%",
+                                "Built RESTful APIs handling 100K+ daily requests",
+                                "Collaborated with UX team to implement responsive designs",
+                                "Maintained 99.9% uptime for critical business applications"
+                            ]
+                        }
+                    ],
+                    education: [
+                        {
+                            degree: "Bachelor of Science in Computer Science",
+                            institution: "University of California, Berkeley",
+                            year: "2019",
+                            gpa: "3.7/4.0",
+                            details: "Relevant Coursework: Data Structures, Algorithms, Software Engineering, Database Systems"
+                        }
+                    ],
+                    skills: {
+                        "Programming Languages": ["JavaScript", "TypeScript", "Python", "Java"],
+                        "Frontend": ["React", "Vue.js", "HTML5", "CSS3", "Sass"],
+                        "Backend": ["Node.js", "Express", "Django", "Spring Boot"],
+                        "Databases": ["PostgreSQL", "MongoDB", "Redis"],
+                        "Cloud & DevOps": ["AWS", "Docker", "Kubernetes", "Jenkins"],
+                        "Tools": ["Git", "Jira", "Figma", "Postman"]
+                    }
+                };
+
+                this.dataTextarea.value = JSON.stringify(sampleData, null, 2);
+                this.showStatus('Sample data loaded successfully', 'success');
+                
+                if (this.previewContainer.classList.contains('active')) {
+                    this.updatePreview();
+                }
+            }
+        }
+
+        // Initialize the module
+        let resumeExporter;
+        document.addEventListener('DOMContentLoaded', () => {
+            resumeExporter = new ResumePDFExporter();
+        });
+
+        // Export functions for external use
+        function exportToPDF() {
+            resumeExporter.exportToPDF();
+        }
+
+        function togglePreview() {
+            resumeExporter.togglePreview();
+        }
+
+        function loadSampleData() {
+            resumeExporter.loadSampleData();
+        }
+
+        // Module API for external integration
+        window.ResumePDFExporter = ResumePDFExporter;
+    </script>
+</body>
+</html>
