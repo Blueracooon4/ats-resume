@@ -7,7 +7,7 @@ Generates a clean, professional resume
 
 Works directly in the browser
 
-Lets users save and update their resume anytime
+Lets users save and update their resumes anytime
 
 Helps us as students learn how real web apps work
 
