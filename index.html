@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Builder</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ATS Resume Builder</h1>
+            <p>Create your standout resume by our comprehensive builder
+
+Enter your details to get your pdf resume, with the Power of A.I
+
+Make your ATS friendly resume just in one click.</p>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section">
+                <form id="resumeForm">
+                    <!-- Personal Information -->
+                    <div class="section">
+                        <h3> Personal Information</h3>
+                        <div class="form-group">
+                            <label for="fullName">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location (City, State)</label>
+                            <input type="text" id="location" name="location">
+                        </div>
+                        <div class="form-group">
+                            <label for="linkedin">LinkedIn Profile</label>
+                            <input type="url" id="linkedin" name="linkedin">
+                        </div>
+                        <div class="form-group">
+                            <label for="website">Portfolio/Website</label>
+                            <input type="url" id="website" name="website">
+                        </div>
+                    </div>
+
+                    <!-- Professional Summary -->
+                    <div class="section">
+                        <h3> Professional Summary</h3>
+                        <div class="form-group">
+                            <label for="summary">Professional Summary (2-3 sentences)</label>
+                            <textarea id="summary" name="summary" placeholder="Brief overview of your professional background and key qualifications..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Work Experience -->
+                    <div class="section">
+                        <h3> Work Experience</h3>
+                        <div id="workExperience">
+                            <div class="dynamic-section">
+                                <div class="form-group">
+                                    <label>Job Title *</label>
+                                    <input type="text" name="jobTitle[]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Company Name *</label>
+                                    <input type="text" name="company[]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" name="jobLocation[]">
+                                </div>
+                                <div class="form-group">
+                                    <label>Start Date *</label>
+                                    <input type="month" name="startDate[]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>End Date (Leave blank if current)</label>
+                                    <input type="month" name="endDate[]">
+                                </div>
+                                <div class="form-group">
+                                    <label>Job Responsibilities (one per line)</label>
+                                    <textarea name="responsibilities[]" placeholder="• Managed team of 5 developers&#10;• Increased system efficiency by 30%&#10;• Led implementation of new processes"></textarea>
+                                </div>
+                                <button type="button" class="btn btn-danger" onclick="removeSection(this)">Remove Experience</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn" onclick="addWorkExperience()">+ Add Work Experience</button>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="section">
+                        <h3> Education </h3>
+                        <div id="education">
+                            <div class="dynamic-section">
+                                <div class="form-group">
+                                    <label>Degree *</label>
+                                    <input type="text" name="degree[]" placeholder="Bachelor of Science in Computer Science" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Institution *</label>
+                                    <input type="text" name="institution[]" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Location</label>
+                                    <input type="text" name="eduLocation[]">
+                                </div>
+                                <div class="form-group">
+                                    <label>Graduation Year</label>
+                                    <input type="number" name="gradYear[]" min="1950" max="2030">
+                                </div>
+                                <div class="form-group">
+                                    <label>GPA (optional)</label>
+                                    <input type="text" name="gpa[]" placeholder="3.8/4.0">
+                                </div>
+                                <button type="button" class="btn btn-danger" onclick="removeSection(this)">Remove Education</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn" onclick="addEducation()">+ Add Education</button>
+                    </div>
+
+                    <!-- Skills -->
+                    <div class="section">
+                        <h3> Skills</h3>
+                        <div class="form-group">
+                            <label for="technicalSkills">Technical Skills (comma-separated)</label>
+                            <textarea id="technicalSkills" name="technicalSkills" placeholder="JavaScript, Python, React, Node.js, SQL, AWS, Docker"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="softSkills">Soft Skills (comma-separated)</label>
+                            <textarea id="softSkills" name="softSkills" placeholder="Leadership, Communication, Problem Solving, Team Management"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Projects -->
+                    <div class="section">
+                        <h3> Projects (Optional)</h3>
+                        <div id="projects">
+                            <div class="dynamic-section">
+                                <div class="form-group">
+                                    <label>Project Name</label>
+                                    <input type="text" name="projectName[]">
+                                </div>
+                                <div class="form-group">
+                                    <label>Technologies Used</label>
+                                    <input type="text" name="projectTech[]" placeholder="React, Node.js, MongoDB">
+                                </div>
+                                <div class="form-group">
+                                    <label>Project Description</label>
+                                    <textarea name="projectDesc[]" placeholder="Brief description of the project and your role"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>Project URL (optional)</label>
+                                    <input type="url" name="projectUrl[]">
+                                </div>
+                                <button type="button" class="btn btn-danger" onclick="removeSection(this)">Remove Project</button>
+                            </div>
+                        </div>
+                        <button type="button" class="btn" onclick="addProject()">+ Add Project</button>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div class="section">
+                        <h3> Certifications (Optional)</h3>
+                        <div class="form-group">
+                            <label for="certifications">Certifications (one per line)</label>
+                            <textarea id="certifications" name="certifications" placeholder="AWS Certified Solutions Architect&#10;Google Analytics Certified&#10;PMP Certification"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="preview-section">
+                <h3 style="margin-bottom: 1rem; color: #2c3e50;"> Resume Preview</h3>
+                <div id="resumePreview" class="preview">
+                    <div class="contact-info">
+                        <h1 id="previewName">Your Name</h1>
+                        <div class="contact-line" id="previewContact">
+                            <span id="previewEmail">email@example.com</span> | 
+                            <span id="previewPhone">(555) 123-4567</span>
+                        </div>
+                        <div class="contact-line" id="previewLinks" style="display: none;"></div>
+                    </div>
+                    
+                    <div id="previewSummary" style="display: none;">
+                        <h2>PROFESSIONAL SUMMARY</h2>
+                        <p id="summaryText"></p>
+                    </div>
+
+                    <div id="previewWork" style="display: none;">
+                        <h2>PROFESSIONAL EXPERIENCE</h2>
+                        <div id="workList"></div>
+                    </div>
+
+                    <div id="previewEdu" style="display: none;">
+                        <h2>EDUCATION</h2>
+                        <div id="eduList"></div>
+                    </div>
+
+                    <div id="previewSkills" style="display: none;">
+                        <h2>SKILLS</h2>
+                        <div id="skillsList"></div>
+                    </div>
+
+                    <div id="previewProjects" style="display: none;">
+                        <h2>PROJECTS</h2>
+                        <div id="projectsList"></div>
+                    </div>
+
+                    <div id="previewCerts" style="display: none;">
+                        <h2>CERTIFICATIONS</h2>
+                        <div id="certsList"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="download-section">
+            <button type="button" class="btn btn-success" onclick="downloadPDF()" style="font-size: 1.1rem; padding: 1rem 2rem;">
+                 Download Your ATS Resume as PDF
+            </button>
+        </div>
+    </div>
+
+</body>
+</html>
+
+
+
