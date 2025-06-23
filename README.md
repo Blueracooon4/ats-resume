@@ -20,8 +20,5 @@ JavaScript – For making the website interactive
 
 html2pdf.js – To download the resume as a PDF
 
-Firebase – For user login and storing resume data
-
-Netlify/Firebase Hosting – To host the live app
 
 This project also helped me learn about real-world development, teamwork, and deploying a live app online.# ats-resume
