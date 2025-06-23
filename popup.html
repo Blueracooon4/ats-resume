@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATS Resume Builder - Welcome</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a2e 25%, #16213e 50%, #0f3460 75%, #000000 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(138, 43, 226, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(75, 0, 130, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .intro-container {
+            max-width: 800px;
+            padding: 60px 40px;
+            background: rgba(10, 10, 10, 0.95);
+            backdrop-filter: blur(30px);
+            border-radius: 25px;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(138, 43, 226, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transform: scale(0.8);
+            animation: popIn 0.8s ease-out 0.3s forwards;
+        }
+
+        @keyframes popIn {
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .intro-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(138, 43, 226, 0.05) 50%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .logo-section {
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .logo-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #8a2be2 0%, #ff00ff 50%, #4b0082 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            color: white;
+            text-shadow: 0 0 20px rgba(138, 43, 226, 0.8);
+            box-shadow: 
+                0 0 40px rgba(138, 43, 226, 0.4),
+                0 0 80px rgba(255, 0, 255, 0.2);
+            animation: pulse 2s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, #e0e0ff, #d0d0ff, #c0c0ff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
+            animation: titleGlow 3s ease-in-out infinite;
+            line-height: 1.1;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: #b0b0ff;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.6s forwards;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #d0d0ff;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 0.9s forwards;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 1.2s forwards;
+        }
+
+        .feature {
+            background: rgba(138, 43, 226, 0.1);
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(138, 43, 226, 0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .feature:hover::before {
+            left: 100%;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(138, 43, 226, 0.3);
+            border-color: #8a2be2;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #8a2be2;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .feature-desc {
+            font-size: 0.9rem;
+            color: #b0b0ff;
+            line-height: 1.4;
+        }
+
+        .cta-section {
+            opacity: 0;
+            animation: slideUp 0.8s ease-out 1.5s forwards;
+        }
+
+        .get-started-btn {
+            background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.4);
+            position: relative;
+            overflow: hidden;
+            margin-right: 20px;
+        }
+
+        .get-started-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .get-started-btn:hover::before {
+            left: 100%;
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(138, 43, 226, 0.6);
+            background: linear-gradient(135deg, #9932cc 0%, #5500aa 100%);
+        }
+
+        .skip-btn {
+            background: transparent;
+            color: #b0b0ff;
+            border: 2px solid rgba(138, 43, 226, 0.3);
+            padding: 16px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .skip-btn:hover {
+            background: rgba(138, 43, 226, 0.1);
+            border-color: #8a2be2;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: floatParticle linear infinite;
+            pointer-events: none;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(138, 43, 226, 0.8);
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.9);
+        }
+
+        .star {
+            width: 6px;
+            height: 6px;
+            background: white;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+            transform: rotate(45deg);
+        }
+
+        @keyframes floatParticle {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ffffff;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .intro-container {
+                margin: 20px;
+                padding: 40px 20px;
+            }
+            
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .get-started-btn {
+                margin-right: 0;
+                margin-bottom: 15px;
+                display: block;
+                width: 100%;
+            }
+        }
+
+        .fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to { opacity: 0; transform: scale(0.9); }
+        }
+    </style>
+</head>
+<body>
+    <div class="intro-overlay" id="introOverlay">
+        <div class="intro-container">
+            <button class="close-btn" onclick="closeIntro()" title="Close">×</button>
+            
+            <div class="logo-section">
+                <div class="logo-icon">📄</div>
+            </div>
+
+            <h1 class="main-title">ATS Resume Builder</h1>
+            <p class="subtitle">Build Your Career-Winning Resume</p>
+            
+            <p class="description">
+                Create professional, ATS-friendly resumes that get noticed by employers. 
+                Our AI-powered builder helps you craft the perfect resume tailored to beat 
+                applicant tracking systems and land your dream job.
+            </p>
+
+            <div class="features">
+                <div class="feature">
+                    <span class="feature-icon">🤖</span>
+                    <div class="feature-title">AI-Powered</div>
+                    <div class="feature-desc">Smart suggestions and optimization</div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📊</span>
+                    <div class="feature-title">ATS-Friendly</div>
+                    <div class="feature-desc">Passes applicant tracking systems</div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">Fast & Easy</div>
+                    <div class="feature-desc">Create professional resumes in minutes</div>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">📱</span>
+                    <div class="feature-title">Mobile Ready</div>
+                    <div class="feature-desc">Works perfectly on any device</div>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <button class="get-started-btn" onclick="startBuilding()">
+                    🚀 Start Building Now
+                </button>
+                <button class="skip-btn" onclick="closeIntro()">
+                    Skip Introduction
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Your existing resume form content would go here -->
+    <div style="display: none;" id="mainContent">
+        <!-- The content from your original index.html would be inserted here -->
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particleCount = 30;
+            const overlay = document.getElementById('introOverlay');
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = `particle ${Math.random() > 0.5 ? 'dot' : 'star'}`;
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDuration = (8 + Math.random() * 8) + 's';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                overlay.appendChild(particle);
+            }
+        }
+
+        // Initialize particles
+        createParticles();
+
+        // Function to start building resume
+        function startBuilding() {
+            // Add some excitement with a brief animation
+            const container = document.querySelector('.intro-container');
+            container.style.transform = 'scale(1.05)';
+            container.style.transition = 'transform 0.2s ease';
+            
+            setTimeout(() => {
+                closeIntro();
+            }, 200);
+        }
+
+        // Function to close introduction
+        function closeIntro() {
+            const overlay = document.getElementById('introOverlay');
+            const mainContent = document.getElementById('mainContent');
+            
+            overlay.classList.add('fade-out');
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                mainContent.style.display = 'block';
+                
+                // If you want to show the main resume form, you would integrate it here
+                // For now, we'll show a simple message
+                document.body.innerHTML = `
+                    <div style="
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        height: 100vh; 
+                        color: white; 
+                        text-align: center;
+                        font-family: 'Segoe UI', sans-serif;
+                    ">
+                        <div>
+                            <h2 style="margin-bottom: 20px; font-size: 2rem;">Welcome to the Resume Builder!</h2>
+                            <p style="font-size: 1.2rem; opacity: 0.8;">
+                                The main resume form would be loaded here.<br>
+                                Integrate this popup with your existing form by replacing this section 
+                                with your original HTML content.
+                            </p>
+                            <button onclick="location.reload()" style="
+                                margin-top: 30px;
+                                background: linear-gradient(135deg, #8a2be2 0%, #4b0082 100%);
+                                color: white;
+                                border: none;
+                                padding: 12px 30px;
+                                border-radius: 25px;
+                                cursor: pointer;
+                                font-size: 1rem;
+                                transition: all 0.3s ease;
+                            ">
+                                ← Back to Introduction
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }, 500);
+        }
+
+        // Optional: Auto-close after 10 seconds if user doesn't interact
+        setTimeout(() => {
+            const overlay = document.getElementById('introOverlay');
+            if (overlay.style.display !== 'none') {
+                // Uncomment the line below if you want auto-close
+                // closeIntro();
+            }
+        }, 10000);
+
+        // Add keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeIntro();
+            } else if (e.key === 'Enter') {
+                startBuilding();
+            }
+        });
+
+        // Add smooth scrolling and enhanced interactions
+        document.querySelectorAll('.feature').forEach((feature, index) => {
+            feature.style.animationDelay = (1.2 + index * 0.1) + 's';
+        });
+    </script>
+</body>
+</html>
